@@ -1,0 +1,72 @@
+schema: '2.0'
+stages:
+  preprocess:
+    cmd: python src/data_preprocessing.py
+    deps:
+    - path: data/raw
+      hash: md5
+      md5: b8b92fb5fef8d86c975178a836781332.dir
+      size: 5121772225
+      nfiles: 101012
+    - path: src/data_preprocessing.py
+      hash: md5
+      md5: e571a8165d1b239e2aed7610178aab42
+      size: 2601
+    outs:
+    - path: data/processed/food101_test.csv
+      hash: md5
+      md5: 0a358b6ec2a3e44f9e3f8ce8db4a41e7
+      size: 1565959
+    - path: data/processed/food101_train.csv
+      hash: md5
+      md5: c21d3688a9d8ac6654d6465327a2ab70
+      size: 4774092
+  train:
+    cmd: python src/train.py --config=params.yaml
+    deps:
+    - path: data/processed/food101_train.csv
+      hash: md5
+      md5: c21d3688a9d8ac6654d6465327a2ab70
+      size: 4774092
+    - path: params.yaml
+      hash: md5
+      md5: f575ecec410e84bb1fda61c5c2c90974
+      size: 102
+    - path: src/data_loader.py
+      hash: md5
+      md5: e6245bbf471276ce9abd46b7e195c920
+      size: 1512
+    - path: src/train.py
+      hash: md5
+      md5: d914995030700d7331c9041dd5fd0150
+      size: 2649
+    outs:
+    - path: metrics.json
+      hash: md5
+      md5: ebdacc30ae0330cb18fb6d62a8ccd1a7
+      size: 61
+    - path: models/model.pth
+      hash: md5
+      md5: 12df8802a1b6609aa27a10c484cad388
+      size: 44985410
+  evaluate:
+    cmd: python src/evaluation.py
+    deps:
+    - path: data/processed
+      hash: md5
+      md5: 5305088ec9a34bea98792a42c5d3d51e.dir
+      size: 6342837
+      nfiles: 3
+    - path: models/model.pth
+      hash: md5
+      md5: 12df8802a1b6609aa27a10c484cad388
+      size: 44985410
+    - path: src/evaluation.py
+      hash: md5
+      md5: f0b5a74b50f8e2694cc534c545edb208
+      size: 1782
+    outs:
+    - path: evaluation.json
+      hash: md5
+      md5: a7fae23f377fe9245b5d6eb0ca454b0f
+      size: 18
